@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="head :: head"></head>
+<body>
+  <!-- 
+    BARRA DE NAVEGACAO 
+  -->
+   <nav th:replace="menu :: navmenu">
+	  
+	</nav>
+  <!-- 
+    CONTEUDO DA PAGINA 
+  -->
+   <main class="container">
+    <a class="btn btn-primary active" role="button" th:href="@{/people/new}">
+    <i class="bi bi-plus-square"></i>
+    Pessoa
+    </a>
+        
+    <div class="bg-light p-5 rounded">
+    <div class="row">
+    	<form th:object="${pessoa}" th:action="@{/people/save}" method="POST">
+    	  <input type='hidden' th:field="*{id}" id="id">
+	      <div class="col-8">
+            <label class="form-label" for="nome">Nome:</label> 
+         	<input type="text" id="name" th:field="*{name}" class="form-control" placeholder="Nome da pessoa" th:errorclass="inputError" autocomplete="off">
+         
+         	<span class='error' 
+         		th:if="${#fields.hasErrors('name')}"
+         		th:errors='*{name}'>
+         		campo inválido
+         	</span>
+          </div>
+       
+          
+          <br>
+          <button class='btn btn-primary'>Enviar</button>
+    	</form>          
+        </div>
+    </div>
+  </main>
+  
+  <script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="head :: head"></head>
+<body>
+  <!-- 
+    BARRA DE NAVEGACAO 
+  -->
+  <nav th:replace="menu :: navmenu">
+	  
+	</nav>
+  <!-- 
+    CONTEUDO DA PAGINA 
+  -->
+  <main class="container">
+        
+    <div class="bg-light p-5 rounded">
+    
+	    <div class="row">
+	       	<a th:href="@{/filmes/list}">Listar filmes</a>
+	     </div>
+	     
+	     <div class="row">
+	       	<a th:href="@{/people/list}">Listar pessoas</a>
+	     </div>
+      
+    </div>
+  </main>
+  <script type="text/javascript" th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
