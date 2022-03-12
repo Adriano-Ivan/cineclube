@@ -138,7 +138,7 @@ public class ApiController {
 			
 			return ResponseEntity.created(uri).body(pessoa);
 		}catch(Exception e) {
-			return ResponseEntity.notFound().build();
+			return ResponseEntity.badRequest().build();
 		}
 	}
 	
