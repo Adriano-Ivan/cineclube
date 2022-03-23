@@ -13,12 +13,31 @@
 		<a class="btn btn-primary active" role="button"
 			th:href="@{/people/new}"> <i class="bi bi-plus-square"></i> Pessoa
 		</a>
-
+		
+		
+		<form th:if="${search_name}" action="/people/#" th:action="@{/people/extern_people/search}">
+			<br>
+			<input name="name"  placeholder="Pesquise pelo nome">
+			<button class='btn btn-success'>buscar</button>
+		</form>
+		
+		
+		<form th:if="${search_id}" action="/people/#" th:action="@{/people/extern_people}">
+			<br>
+			<input name="id"  type="number" placeholder="Pesquise pelo id">
+			<button class='btn btn-success'>buscar</button>
+		</form>
+		
 		<div class="bg-light p-5 rounded">
 			<div class="row">
-
-				<h2>Filmes + Séries disponíveis</h2>
-				<table class="table table-striped table-bordered table-hover">
+				
+				<div style="display:flex;justify-content:space-between;margin-bottom: 10vh">
+					<h2>Pessoas</h2>
+					<a th:href="@{/people/extern_people?id=4111}" style="text-decoration:none;color:red">Visualizar pessoas externas (API TMDB) por ID</a>
+					<a th:href="@{/people/extern_people/search?name=Sam+Worthington}" style="text-decoration:none;color:red">Visualizar pessoas externas (API TMDB) por nome</a>
+				</div>
+				
+				<table th:if="${pessoaList}" class="table table-striped table-bordered table-hover">
 					<thead>
 						<tr>
 							<th>ID</th>
@@ -42,7 +61,36 @@
 						</tr>
 					</tbody>
 				</table>
+				
+				<table th:if="${extern_people}">
+					<thead>
+						<tr>
+							<th>id</th>
+							<th>name</th>
+							<th>popularity</th>
+							<th>photo</th>
+							<th>Save option</th>
+						</tr>
+					</thead>
+					<tbody>	
+						<tr th:each="person : ${extern_people}">
+							<td th:text="${person.id}">
+							<td th:text="${person.name}">
+							<td th:text="${person.popularity}">
+							<td th:if="${person.profile_path} != null" >
+								<img style="width:150px;height:150px;" th:src="@{https://image.tmdb.org/t/p/w500{profile_path}(profile_path=${person.profile_path})}">
+							</td>
+							<td th:if="${person.profile_path} == null" th:text="${'Sem imagem dessa pessoa'}">
+							<td>
+								<a th:href="@{/people/save/extern?(name=${person.name})}" style="text-decoration:none;color:green">Save person</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				
+				
 
+				<div th:if="${mensagem}" th:text="${mensagem}"></div>
 			</div>
 
 		</div>

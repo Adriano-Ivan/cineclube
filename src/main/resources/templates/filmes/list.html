@@ -1,4 +1,5 @@
 <!doctype html>
+  <meta charset="utf-8">
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="head :: head"></head>
 <body>
@@ -20,13 +21,14 @@
     <div class="bg-light p-5 rounded">
     
     <div class="row">
-        <form action="" method="GET">
+        <form  th:if="${categorias}" action="" method="GET">
         <div class="mb-2">
           <label class="form-label" for="categoria">Filtrar por categoria: </label>
         </div>
         <div class="mb-2"> 
           <select class="form-select" name="cat" required="required">
-            <option >Select category</option> 
+          	<option value="escolha a categoria">Escolha a categoria</option>
+            <option th:each="categoria: ${categorias}" th:value="${categoria}"  th:text="${categoria}"></option> 
           
           </select>
         </div>
@@ -34,17 +36,68 @@
           <button class="btn btn-success" type="submit">find</button>
         </div>
         </form>
+        
+        <form th:if="${search_film}" th:action="@{/filmes/extern_movies}" class="form mb-4" method="GET">
+        	<div class="form-group mb-2">
+        		<label for="minDate">Data inicial:</label>
+        		<input class="form-control" name="minDate" type="date" id="minDate" placeholder="Data inicial">
+        	</div>
+        	<div class="form-group mb-2">
+        		<label for="maxDate">Data final:</label>
+        		<input class="form-control" name="maxDate" type="date" id="maxDate" placeholder="Data final">
+        	</div>
+        	<div class="form-group mb-2">
+        		<label for="genre">Gênero:</label>
+        		<select class="form-select" id="genre" name="genre" required>
+        			<option th:each="genre: ${genres}" th:value="${genre.id}" th:text="${genre.name}">
+        		</select>
+        	</div>
+        	<button class="btn btn-success">Buscar</button>
+        </form>
       </div>
       
       <div class="row">
     
-      <h2>Filmes + Séries disponíveis</h2>
-      <table class="table table-striped table-bordered table-hover">
+	  <div style="display:flex;justify-content:space-between">
+	     <h2>Filmes</h2>
+         <a th:href="@{/filmes/extern_movies}" style="color:red;text-decoration:none">Acesssar filmes com a API do TDMB</a>
+	  </div>
+      
+      <div th:if="${mensagemDeErro}" th:text="${mensagemDeErro}">
+      </div>
+      
+      <table th:if="${extern_movies}" class="table table-striped table-bordered table-hover">
+      	<thead>
+      		<tr>
+      			<th>ID</th>
+      			<th>título</th>
+      			<th>Data de lançamento</th>
+      			<th>Nota</th>
+      			<th>Detalhar</th>
+      		</tr>
+      	</thead>
+      	<tbody>
+      		<tr th:each="movie: ${extern_movies}">
+      			<td th:text="${movie.id}">
+      			<td>
+      				<span th:text="${movie.title}"></span><br>
+          			<img style="width:150px;height:150px;" th:if="${movie.poster_path} != null" th:src="@{https://image.tmdb.org/t/p/w500{poster_path}(poster_path=${movie.poster_path})}">
+      			</td>
+      			<td th:text="${movie.release_date}">
+      			<td th:text="${movie.vote_average}">
+      			<td >
+      				<a th:href="@{/filmes/extern_movies/details/{id}(id=${movie.id})}" class="btn btn-success">Detalhar</a>
+      			</td>
+      		</tr>
+      	</tbody>
+      </table>
+      
+      <table th:if="${filmeList}" class="table table-striped table-bordered table-hover">
       <thead>
         <tr>
           <th>ID</th>
           <th>Nome</th>
-          <th>Lançamento</th>
+          <th>LanÃ§amento</th>
           <th>Categoria</th>
           <th>Edit</th>
           <th>Delete</th>
@@ -68,6 +121,8 @@
             <i class="bi bi-dash-circle" title="delete"></i>
           </a></td>
         </tr>
+        
+        <
       </tbody>
       </table>
       

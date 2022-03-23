@@ -1,4 +1,5 @@
 <!doctype html>
+<meta charset="utf-8">
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="head :: head"></head>
 <body>
@@ -18,8 +19,38 @@
     </a>
         
     <div class="bg-light p-5 rounded">
+    <div th:if="${extern_movie}" class="row">
+    	<div class="row mb-3">
+    		<h2 th:text="${extern_movie.title}">
+    	</div>
+    	<div  class="row">
+    		<p style="max-width:750px" th:text="${extern_movie.overview}">
+    	</div>
+    	<div class="row mb-3">
+    		<div>
+    			<img th:if="${extern_movie.poster_path} != null"
+    			 th:src="@{https://image.tmdb.org/t/p/w500{poster_path}(poster_path=${extern_movie.poster_path})}">
+    		</div>
+    	</div>
+    	<div class="row mb-3">
+    		<p>
+    			<span>Número de avaliações: </span><span th:text="${extern_movie.vote_count}"></span>
+    		</p>
+    	</div>
+    	<div class="row mb-3">
+    		<p>
+    			<span>Data de lançamento: </span><span th:text="${extern_movie.release_date}"></span>
+    		</p>
+    	</div>
+    	<div class="row mb-3">
+    		<p>
+    			<span>Nota: </span><span th:text="${extern_movie.vote_average}"></span>
+    		</p>
+    	</div>
+    	
+    </div>
     <div class="row">
-    	<form th:object="${filme}" th:action="@{/filmes/save}" method="POST">
+    	<form th:if="${extern_movie} == null" th:object="${filme}" th:action="@{/filmes/save}" method="POST">
     	  <input type='hidden' th:field="*{id}" id="id">
 	      <div class="col-8">
             <label class="form-label" for="nome">Nome:</label> 
@@ -28,7 +59,7 @@
          	<span class='error' 
          		th:if="${#fields.hasErrors('title')}"
          		th:errors='*{title}'>
-         		campo inválido
+         		campo invÃ¡lido
          	</span>
           </div>
           <div class="col">
@@ -40,7 +71,7 @@
             <span class='error' 
          		th:if="${#fields.hasErrors('score')}"
          		th:errors='*{score}'>
-         		campo inválido
+         		campo invÃ¡lido
          	</span>
           </div>
           
@@ -53,7 +84,7 @@
             <span class='error' 
          		th:if="${#fields.hasErrors('release')}"
          		th:errors='*{release}'>
-         		campo inválido
+         		campo invÃ¡lido
          	</span>
           </div>
  
@@ -67,7 +98,7 @@
             <span class='error' 
          		th:if="${#fields.hasErrors('category')}"
          		th:errors='*{category}'>
-         		campo inválido
+         		campo invÃ¡lido
          	</span>
           </div>
           

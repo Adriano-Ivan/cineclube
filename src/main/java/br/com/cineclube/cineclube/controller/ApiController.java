@@ -50,7 +50,7 @@ public class ApiController {
 	public ResponseEntity<Filme> getFilme(@PathVariable("id") Long id) {
 		Optional<Filme> f = filmeRepository.findById(id);
 		
-		if(f.isEmpty()) {
+		if(!f.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
 		
@@ -77,7 +77,7 @@ public class ApiController {
 		try {
 			Optional<Filme> filmeSolicitado = filmeRepository.findById(id);
 			
-			if(filmeSolicitado.isEmpty()) {
+			if(!filmeSolicitado.isPresent()) {
 				return ResponseEntity.notFound().build();
 			}
 			
@@ -120,7 +120,7 @@ public class ApiController {
 	public ResponseEntity<Pessoa> getPessoa(@PathVariable("id") Long id){
 		Optional<Pessoa> pessoa = pessoaRepository.findById(id);
 		
-		if(pessoa.isEmpty()) {
+		if(!pessoa.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
 		
@@ -148,7 +148,7 @@ public class ApiController {
 		try {
 			Optional<Pessoa> pessoaSolicitada = pessoaRepository.findById(id);
 			
-			if(pessoaSolicitada.isEmpty()) {
+			if(!pessoaSolicitada.isPresent()) {
 				return ResponseEntity.notFound().build();
 			}
 			

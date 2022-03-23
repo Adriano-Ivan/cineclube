@@ -8,6 +8,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,12 +18,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import br.com.cineclube.cineclube.model.Category;
 import br.com.cineclube.cineclube.model.Filme;
+import br.com.cineclube.cineclube.model.Movie;
 import br.com.cineclube.cineclube.repository.FilmeRepository;
 import br.com.cineclube.cineclube.util.mvc.GenderStringToEnumConverter;
+import br.com.cineclube.cineclube.util.mvc.ResourceGenre;
+import br.com.cineclube.cineclube.util.mvc.WrapperMovieSearch;
 
 @Controller
 @RequestMapping("/filmes")
@@ -30,10 +35,63 @@ public class FilmeController {
 	
 	@Autowired
 	private FilmeRepository filmeRepository;
+	
+	@Autowired
+	private RestTemplate apiRequest;
+	
+	@Value("${api.base_servico2}")
+	private String apiBaseServico2;
+	
+	@Autowired
+	private ResourceGenre resourceGenre;
 //	
 //	@Autowired
 //	private GenderStringToEnumConverter converterCategory;
 //	
+	
+	@GetMapping("/extern_movies")
+	public String externMovies(Model model, @RequestParam(required=false) String minDate, 
+			@RequestParam(required=false) String maxDate, @RequestParam(required=false) String genre) {
+		WrapperMovieSearch res = null;
+		String mensagemDeErro = "Não foram encontrados filmes que combinem com esse nome.";
+		model.addAttribute("search_film",true);
+		model.addAttribute("genres", resourceGenre.returnGenres());
+		try {
+			String endpoint = "http://localhost:8080"+apiBaseServico2+"/movies/filter?minDate="+minDate+"&maxDate="+
+					maxDate+"&genre="+genre;
+			
+			res = apiRequest.getForObject(endpoint, WrapperMovieSearch.class);
+			
+			if(res.getResults().size() == 0) {
+				model.addAttribute("mensagemDeErro",mensagemDeErro);
+			}else {
+				model.addAttribute("extern_movies",res.getResults());
+			}
+		}catch(Exception e) {
+			model.addAttribute("mensagemDeErro","Houve um erro na procura de filmes.");
+		}finally {
+			return "filmes/list.html";
+		}
+	}
+	
+	@GetMapping("/extern_movies/details/{id}")
+	public String detailMovie(Model model, @PathVariable("id") String id) {
+		model.addAttribute("search_film",true);
+		model.addAttribute("genres", resourceGenre.returnGenres());
+		try {
+			String endpoint = "http://localhost:8080"+apiBaseServico2+"/movies/"+id;
+			
+			Movie movie = apiRequest.getForObject(endpoint, Movie.class);
+			
+			model.addAttribute("extern_movie",movie);
+		}catch(Exception e) {
+			model.addAttribute("mensagemDeErro", "O ID fornecido não corresponde a um filme.");
+		}finally {
+			return "filmes/manter.html";
+		}
+		
+	}
+	
 	
 	@RequestMapping()
 	public String home(Model model) {
@@ -56,7 +114,9 @@ public class FilmeController {
 	@RequestMapping("/list")
 	public String list(Model model) {
 		List<Filme> filmes = filmeRepository.findAll();
+		Category[] categorias = Category.values();
 		model.addAttribute("filmeList",filmes);
+		model.addAttribute("categorias",categorias);
 		
 		return "filmes/list.html";
 	}
