@@ -28,7 +28,7 @@
     	</div>
     	<div class="row mb-3">
     		<div>
-    			<img th:if="${extern_movie.poster_path} != null"
+    			<img th:if="${extern_movie.poster_path} != null" style="max-width:90%"
     			 th:src="@{https://image.tmdb.org/t/p/w500{poster_path}(poster_path=${extern_movie.poster_path})}">
     		</div>
     	</div>
@@ -47,7 +47,27 @@
     			<span>Nota: </span><span th:text="${extern_movie.vote_average}"></span>
     		</p>
     	</div>
-    	
+    	<div class="row mb-3">
+    		<p>
+    		<span style="padding-bottom:10px;">Gêneros do filme: </span>
+    		<span th:if="${movie_genres}" 
+    		th:each="genre: ${movie_genres}" th:text="${genre}" style="padding:5px; 
+    		margin-right:5px;background-color: #ccc;border-radius:9%"></span>
+    		</p>
+    	</div>
+    	<div class="row mb-3">
+    		<form th:object="${filme}" th:action="@{/filmes/extern_movies/save}" method="POST">
+    			<div style="display:none" >
+    				<input class="form-control" type="text" name="title" id="title"
+    				 th:value="${extern_movie.title}" required>
+    				<input class="form-control" type="date" name="release" id="release"
+    				th:value="${extern_movie.release_date}" required>
+    				<input class="form-control" type="text" name="score"
+    				th:value="${extern_movie.vote_average}" id="score" required>
+    			</div>
+    			<button class="btn btn-success">Salvar</button>
+    		</form>
+    	</div>
     </div>
     <div class="row">
     	<form th:if="${extern_movie} == null" th:object="${filme}" th:action="@{/filmes/save}" method="POST">

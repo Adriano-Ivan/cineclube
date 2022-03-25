@@ -1,5 +1,5 @@
 <!doctype html>
-  <meta charset="utf-8">
+<meta charset="utf-8">
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="head :: head"></head>
 <body>
@@ -37,7 +37,19 @@
         </div>
         </form>
         
-        <form th:if="${search_film}" th:action="@{/filmes/extern_movies}" class="form mb-4" method="GET">
+        <section class="row">
+        <form th:if="${search_film}" th:action="@{/filmes/extern_movie}" class="form mb-4 col-md-6" method="GET">
+        	<div class="form-group mb-2">
+        		<label for="id">Escolha o ID: </label><br>
+        		<input type="number" id="id" name="id" placeholder="digite ou selecione um id" style="outline:none;width:67%">
+        	</div>
+        	<button class="btn btn-success">Buscar por ID</button>
+        </form>
+        
+        <form th:if="${search_film}" th:action="@{/filmes/extern_movies}" class="form mb-4 col-md-6" method="GET">
+        	<div class="form-group">
+        		<h3>Filtrar: </h3>
+        	</div>
         	<div class="form-group mb-2">
         		<label for="minDate">Data inicial:</label>
         		<input class="form-control" name="minDate" type="date" id="minDate" placeholder="Data inicial">
@@ -52,15 +64,17 @@
         			<option th:each="genre: ${genres}" th:value="${genre.id}" th:text="${genre.name}">
         		</select>
         	</div>
-        	<button class="btn btn-success">Buscar</button>
+        	<button class="btn btn-success">Filtrar</button>
         </form>
+        </section>
       </div>
       
       <div class="row">
     
 	  <div style="display:flex;justify-content:space-between">
 	     <h2>Filmes</h2>
-         <a th:href="@{/filmes/extern_movies}" style="color:red;text-decoration:none">Acesssar filmes com a API do TDMB</a>
+         <a th:href="@{/filmes/extern_movies}" style="color:blue;text-decoration:none;font-size:22px;
+         padding:7px;border:1px solid blue">Acesssar filmes com a API do TDMB</a>
 	  </div>
       
       <div th:if="${mensagemDeErro}" th:text="${mensagemDeErro}">

@@ -38,7 +38,6 @@ public class Filme {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate release;
 	
-	@NotNull
 	private Category category;
 	
 	

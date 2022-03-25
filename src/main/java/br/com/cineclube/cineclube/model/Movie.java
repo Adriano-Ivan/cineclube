@@ -2,6 +2,7 @@ package br.com.cineclube.cineclube.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 public class Movie {
 
@@ -12,6 +13,8 @@ public class Movie {
 	private String poster_path;
 	private LocalDate release_date;
 	private Double vote_count;
+	private List<Long> genre_ids;
+	private List<Genre> genres;
 	
 	public Long getId() {
 		return id;
@@ -54,6 +57,18 @@ public class Movie {
 	}
 	public void setVote_count(Double vote_count) {
 		this.vote_count = vote_count;
+	}
+	public List<Long> getGenre_ids() {
+		return genre_ids;
+	}
+	public void setGenre_ids(List<Long> genre_ids) {
+		this.genre_ids = genre_ids;
+	}
+	public List<Genre> getGenres() {
+		return genres;
+	}
+	public void setGenres(List<Genre> genres) {
+		this.genres = genres;
 	}
 	
 }

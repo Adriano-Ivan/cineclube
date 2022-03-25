@@ -2,6 +2,7 @@ package br.com.cineclube.cineclube.controller;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -74,6 +75,26 @@ public class FilmeController {
 		}
 	}
 	
+	@GetMapping("/extern_movie")
+	public String externMovie(Model model, @RequestParam String id) {
+		model.addAttribute("search_film",true);
+		model.addAttribute("genres", resourceGenre.returnGenres());
+		try {
+			String endpoint = "http://localhost:8080"+apiBaseServico2+"/movies/"+id;
+			
+			Movie movie = apiRequest.getForObject(endpoint, Movie.class);
+			List<Movie> movies = new ArrayList<Movie>();
+			
+			movies.add(movie);
+			
+			model.addAttribute("extern_movies",movies);
+			
+		}catch(Exception e) {
+			model.addAttribute("mensagemDeErro","O filme não foi encontrado. Experimente outro ID.");
+		}finally {
+			return "filmes/list.html";
+		}
+	}
 	@GetMapping("/extern_movies/details/{id}")
 	public String detailMovie(Model model, @PathVariable("id") String id) {
 		model.addAttribute("search_film",true);
@@ -81,9 +102,15 @@ public class FilmeController {
 		try {
 			String endpoint = "http://localhost:8080"+apiBaseServico2+"/movies/"+id;
 			
-			Movie movie = apiRequest.getForObject(endpoint, Movie.class);
+			Filme filme = new Filme();
 			
+			Movie movie = apiRequest.getForObject(endpoint, Movie.class);
 			model.addAttribute("extern_movie",movie);
+			
+			List<String> genresNames =  resourceGenre.returnGenresFilteredByIds(movie.getGenres());
+			model.addAttribute("movie_genres",genresNames);
+			model.addAttribute("filme_externo",filme);
+			
 		}catch(Exception e) {
 			model.addAttribute("mensagemDeErro", "O ID fornecido não corresponde a um filme.");
 		}finally {
@@ -92,6 +119,11 @@ public class FilmeController {
 		
 	}
 	
+	@PostMapping("/extern_movies/save")
+	public String saveExternMovie(@Valid Filme filme_externo, Model model) {
+		filmeRepository.save(filme_externo);
+		return "redirect:/filmes/list";
+	}
 	
 	@RequestMapping()
 	public String home(Model model) {
