@@ -107,7 +107,7 @@ public class FilmeController {
 			Movie movie = apiRequest.getForObject(endpoint, Movie.class);
 			model.addAttribute("extern_movie",movie);
 			
-			List<String> genresNames =  resourceGenre.returnGenresFilteredByIds(movie.getGenres());
+			List<String> genresNames =  resourceGenre.extractGenres(movie.getGenres());
 			model.addAttribute("movie_genres",genresNames);
 			model.addAttribute("filme_externo",filme);
 			
